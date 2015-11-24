@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>xFacility v0.0.0</title>
+    <title>xFacility v0.0.1</title>
   </head>
   <body>
     <h1>Congratulations!</h1>
