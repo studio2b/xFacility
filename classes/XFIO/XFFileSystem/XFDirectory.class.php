@@ -8,7 +8,7 @@
 class XFDirectory extends XFObject {
 	private static $path, $fullPath;
 	
-	public function __construct($path = NULL) {
+	function __construct($path = NULL) {
 	}
 	
 	public static function create($path = NULL) {
@@ -27,37 +27,63 @@ class XFDirectory extends XFObject {
 	
 	public static function browse($path = NULL) {
 		//getList in a directory.
+		if(!empty($path))
+			self::getPath($path);
 		
+		if(is_dir(self::$fullPath)) {
+			$handle = opendir(self::$fullPath);
+		} else {
+			$handle = opendir(dirname(self::$fullPath));
+		}
+		while (false !== ($subPath = readdir($handle))) {
+			if ($subPath != "." && $subPath != "..") {
+				if($includePath==true) {
+					$return[] = self::$path."/".$subPath;
+				} else {
+					$return[] = $subPath;
+				}
+			}
+		}
+		closedir($handle);
+		
+		return $return;
 	}
 	
 	public static function peruse($path = NULL) {
 		//getInfo
-		
+		if(!empty($path))
+			self::getPath($path);
+		if(is_dir(self::$fullPath)) {
+			$return = pathinfo(self::$fullPath);
+		} else {
+			$return = false;
+		}
+		return $return;
 	}
 	
 	public static function update($oldPath, $newPath) {
-		
+	
 	}
 	
 	public static function delete($path = NULL) {
 		//Delete directories recursively
 		if(!empty($path))
 			self::getPath($path);
-		$dir = dir(self::$fullPath);
-		while($now = $dir->read()) {
-			if($now!="." || $now!="..") {
-				if(is_dir(self::$fullPath."/".$now)) {
-					self::delete(self::$fullPath."/".$now);
-				} else {
-					unlink(self::$fullPath."/".$now);
+			$dir = dir(self::$fullPath);
+			while($now = $dir->read()) {
+				if($now!="." || $now!="..") {
+					if(is_dir(self::$fullPath."/".$now)) {
+						self::delete(self::$fullPath."/".$now);
+					} else {
+						unlink(self::$fullPath."/".$now);
+					}
 				}
 			}
-		}
-		$dir->close();
-		rmdir(self::$fullPath);
+			$dir->close();
+			rmdir(self::$fullPath);
 	}
 	
-	protected static function getPath($path) {
+	static function getPath($path) {
 		//Add front slash
 		if(substr($path, 0, 1)!="/")
 			$path = "/".$path;

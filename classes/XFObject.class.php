@@ -6,5 +6,8 @@
 //16MAR2015 - This file is newly created.
 
 class XFObject {
+	public static function getPath() {
+		return __DIR__."/..";
+	}
 }
 ?>

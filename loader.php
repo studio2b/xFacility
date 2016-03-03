@@ -13,6 +13,7 @@ function load($className) {
 	
 	$paths[0] = __DIR__."/classes";
 	$j = 1;
+	
 	for($i=0; $i<$j; $i++) {
 		$handle = opendir($paths[$i]);
 		if(is_dir($paths[$i])) {
